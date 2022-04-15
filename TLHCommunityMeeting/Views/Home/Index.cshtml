@@ -1,0 +1,49 @@
+﻿@model List<Question>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Question / Réponse</h1>
+    <p class="lead">
+        <a href="@Url.Action("Create", "Home")" class="btn btn-primary">Poser une question ?</a>
+
+    <table id="table_id" class="display">
+        <thead>
+        <tr>
+            <th>Utilisateur</th>
+            <th>Question</th>
+            <th>Réponse</th>
+            <th>Date de création</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (Question q in Model)
+        {
+            <tr>
+                <td>
+                    @q.DiscordUserId
+                </td>
+                <td>
+                    @q.QuestionText
+                </td>
+                <td>
+                    @q.Answer
+                </td>
+                <td>
+                    @q.CreatedAt.ToString("G")
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable();
+        });
+    </script>
+}
