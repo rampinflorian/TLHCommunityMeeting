@@ -1,0 +1,27 @@
+﻿@model Question
+
+@{
+    ViewBag.Title = "Réponse à la question";
+    Layout = "_Layout";
+}
+
+<h2>Question de @Model.DiscordUserId</h2>
+
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="QuestionId"/>
+    <input type="hidden" asp-for="QuestionText"/>
+    <input type="hidden" asp-for="CreatedAt"/>
+    <input type="hidden" asp-for="DiscordUserId"/>
+    
+    <div class="form-group">
+        <label asp-for="QuestionText"></label>
+        <input asp-for="QuestionText" disabled>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Answer"></label>
+        <textarea asp-for="Answer" rows="10" cols="100"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+</form>

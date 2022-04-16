@@ -38,4 +38,27 @@ public class HomeController : Controller
         
         return RedirectToAction("Index");
     }
+    
+    [Route("edit/{id:int}")]
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var question = _context.Questions.Find(id);
+        if (question == null) return RedirectToAction("Index");
+        
+        return View(question);
+    }
+    
+    [Route("edit/{id:int}")]
+    [HttpPost]
+    public IActionResult Edit(int id, Question question)
+    {
+        if (!ModelState.IsValid) return RedirectToAction("Index");
+        
+        _context.Questions.Update(question);
+        _context.SaveChanges();
+        
+        return RedirectToAction("Index");
+    }
+    
 }

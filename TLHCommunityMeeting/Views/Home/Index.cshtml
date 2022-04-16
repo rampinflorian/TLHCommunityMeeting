@@ -1,9 +1,4 @@
 ﻿@model List<Question>
-
-@{
-    ViewData["Title"] = "Home Page";
-}
-
 <div class="text-center">
     <h1 class="display-4">Question / Réponse</h1>
     <p class="lead">
@@ -16,6 +11,7 @@
             <th>Question</th>
             <th>Réponse</th>
             <th>Date de création</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
@@ -33,6 +29,13 @@
                 </td>
                 <td>
                     @q.CreatedAt.ToString("G")
+                </td>
+                @if(User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@q.QuestionId"><button class="btn btn-primary btn-sm">Répondre</button></a>
+                    </td>
+                }
             </tr>
         }
         </tbody>
