@@ -1,5 +1,7 @@
+using System.Globalization;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using TLHCommunityMeeting.Data;
 
@@ -49,6 +51,29 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+const string defaultDateCulture = "fr-FR";
+var ci = new CultureInfo(defaultDateCulture)
+{
+    NumberFormat =
+    {
+        NumberDecimalSeparator = ".",
+        CurrencyDecimalSeparator = "."
+    }
+};
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture(ci),
+    SupportedCultures = new List<CultureInfo>
+    {
+        ci,
+    },
+    SupportedUICultures = new List<CultureInfo>
+    {
+        ci,
+    }
+});
 
 app.UseStaticFiles();
 
