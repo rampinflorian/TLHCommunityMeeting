@@ -35,7 +35,7 @@ jobs:
       run: |
         dotnet tool install --global dotnet-ef
         dotnet tool restore
-        cd /home/runner/work/TLHCommunityMeeting/TLHCommunityMeeting
+        cd /home/runner/work/TLHCommunityMeeting/TLHCommunityMeeting/TLHCommunityMeeting/
         dotnet-ef database update --connection ${{ secrets.REMOTE_DATABASE_CONNEXION_STRING }}
       shell: bash
         
