@@ -1,0 +1,12 @@
+﻿@model TLHCommunityMeeting.Models.Question?
+
+@{
+    ViewBag.Title = "Aperçu de la question";
+    Layout = "_Layout";
+}
+<b>Utilisateur :</b> <br>
+<p>@Model?.DiscordUserId</p>
+
+<b>Question : </b><br>
+<p>@Model?.QuestionText</p>
+

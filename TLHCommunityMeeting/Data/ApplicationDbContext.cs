@@ -11,5 +11,5 @@ public class ApplicationDbContext : IdentityDbContext
     {
     }
 
-    public DbSet<Question> Questions { get; set; }
+    public DbSet<Question> Questions { get; set; } = null!;
 }

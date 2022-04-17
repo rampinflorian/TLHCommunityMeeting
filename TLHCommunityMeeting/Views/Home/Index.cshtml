@@ -2,7 +2,7 @@
 <div class="text-center">
     <h1 class="display-4">Question / Réponse</h1>
     <p class="lead">
-        <a href="@Url.Action("Create", "Home")" class="btn btn-primary">Poser une question ?</a>
+    <a href="@Url.Action("Create", "Home")" class="btn btn-primary">Poser une question ?</a>
 
     <table id="table_id" class="display">
         <thead>
@@ -22,20 +22,25 @@
                     @q.DiscordUserId
                 </td>
                 <td>
-                    @q.QuestionText
+                    @q.QuestionText.Substring(0, q.QuestionText.Length > 100 ? 100 : q.QuestionText.Length)
                 </td>
                 <td>
-                    @q.Answer
+                    @q.Answer.Substring(0, q.Answer.Length > 100 ? 100 : q.Answer.Length)
                 </td>
                 <td>
                     @q.CreatedAt.ToString("G")
                 </td>
-                @if(User.Identity != null && User.Identity.IsAuthenticated)
-                {
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@q.QuestionId"><button class="btn btn-primary btn-sm">Répondre</button></a>
-                    </td>
-                }
+                <td>
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a asp-action="Edit" asp-route-id="@q.QuestionId">
+                            <button class="btn btn-primary btn-sm">Répondre</button>
+                        </a>
+                    }
+                    <a asp-action="Details" asp-route-questionId="@q.QuestionId">
+                        <button class="btn btn-secondary btn-sm">Voir</button>
+                    </a>
+                </td>
             </tr>
         }
         </tbody>

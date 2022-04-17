@@ -20,6 +20,16 @@ public class HomeController : Controller
         return View(_context.Questions.OrderBy(m => m.CreatedAt).ToList());
     }
     
+    [Route("details/{questionId:int}")]
+    [HttpGet]
+    public IActionResult Details(int questionId)
+    {
+        var question = _context.Questions.First(m => m.QuestionId == questionId);
+
+        return View(question);
+    }
+    
+    
     [Route("create")]
     [HttpGet]
     public IActionResult Create()
