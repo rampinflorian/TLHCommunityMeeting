@@ -40,6 +40,7 @@ public class HomeController : Controller
     
     [Route("create")]
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Create(Question question)
     {
         if (!ModelState.IsValid)
@@ -49,7 +50,7 @@ public class HomeController : Controller
         _context.Questions.Add(question);
         _context.SaveChanges();
         
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
     
     [Route("edit/{id:int}")]
@@ -57,21 +58,38 @@ public class HomeController : Controller
     public IActionResult Edit(int id)
     {
         var question = _context.Questions.Find(id);
-        if (question == null) return RedirectToAction("Index");
+        if (question == null) return RedirectToAction(nameof(Index));
         
         return View(question);
     }
     
     [Route("edit/{id:int}")]
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Edit(int id, Question question)
     {
-        if (!ModelState.IsValid) return RedirectToAction("Index");
+        if (!ModelState.IsValid) return RedirectToAction(nameof(Index));
         
         _context.Questions.Update(question);
         _context.SaveChanges();
         
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
+    }
+    
+    [Route("delete/{id:int}")]
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Delete(int id)
+    {
+        var question = _context.Questions.Find(id);
+        if (question == null) return RedirectToAction(nameof(Index));
+
+        _context.Remove(question);
+        _context.SaveChanges();
+
+        return RedirectToAction(nameof(Index));
+
+
     }
     
 }

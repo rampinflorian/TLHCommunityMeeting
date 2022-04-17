@@ -35,15 +35,21 @@
                     @q.CreatedAt.ToString("G")
                 </td>
                 <td>
-                    @if (User.Identity != null && User.Identity.IsAuthenticated)
-                    {
-                        <a asp-action="Edit" asp-route-id="@q.QuestionId">
-                            <button class="btn btn-primary btn-sm">Répondre</button>
+                    <div class="btn-group">
+                        <a asp-action="Details" asp-route-questionId="@q.QuestionId">
+                            <button class="btn btn-secondary btn-sm">Voir</button>
                         </a>
-                    }
-                    <a asp-action="Details" asp-route-questionId="@q.QuestionId">
-                        <button class="btn btn-secondary btn-sm">Voir</button>
-                    </a>
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <a asp-action="Edit" asp-route-id="@q.QuestionId">
+                                <button class="btn btn-primary btn-sm">Répondre</button>
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@q.QuestionId">
+                                <input type="submit" value="Suppr" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous supprimer la question de @q.DiscordUserId')"/>
+                            </form>
+                        }
+
+                    </div>
                 </td>
             </tr>
         }
@@ -59,7 +65,10 @@
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/French.json"
                 },
-                "order": [] 
+                "order": [], 
+                "columnDefs": [
+                    { "width": "20%", "targets": 5 }
+                ]
             });
         });
     </script>

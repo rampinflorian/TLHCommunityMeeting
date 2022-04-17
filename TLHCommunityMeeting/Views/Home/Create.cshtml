@@ -7,16 +7,17 @@
 <h1><p>Je souhaite poser une question : </p></h1>
 
 <form action="" method="post">
+    @Html.AntiForgeryToken()
     <div class="form-group">
         <label asp-for="DiscordUserId"></label><br>
         <input asp-for="DiscordUserId">
         <span class="text-danger" asp-validation-for="DiscordUserId"></span>
     </div>
     <div class="form-group mt-2">
-            <label asp-for="Subject"></label><br>
-            <input asp-for="Subject">
-            <span class="text-danger" asp-validation-for="Subject"></span>
-        </div>
+        <label asp-for="Subject"></label><br>
+        <input asp-for="Subject">
+        <span class="text-danger" asp-validation-for="Subject"></span>
+    </div>
     <div class="form-group mt-2">
         <label asp-for="QuestionText"></label><br>
         <textarea asp-for="QuestionText" rows="10" cols="100"></textarea>
