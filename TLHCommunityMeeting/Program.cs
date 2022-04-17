@@ -13,7 +13,7 @@ var connectionString = "";
 connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 #else
- Environment.GetEnvironmentVariable("DATABASE_URL")
+ Environment.GetEnvironmentVariable("DATABASE_URL");
 #endif
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
