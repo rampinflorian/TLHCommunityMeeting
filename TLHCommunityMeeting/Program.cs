@@ -6,9 +6,22 @@ using TLHCommunityMeeting.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+var connectionString = "";
+
+#if DEBUG 
+connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+#else
+ Environment.GetEnvironmentVariable("DATABASE_URL")
+#endif
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+{
+    if (connectionString != null) options.UseSqlServer(connectionString);
+});
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
