@@ -17,7 +17,7 @@ public class HomeController : Controller
     [Route("")]
     public IActionResult Index()
     {
-        return View(_context.Questions.OrderBy(m => m.CreatedAt).ToList());
+        return View(_context.Questions.OrderBy(m => m.Answer).ThenBy(m => m.CreatedAt).ToList());
     }
     
     [Route("details/{questionId:int}")]
@@ -41,8 +41,10 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult Create(Question question)
     {
-        if (!ModelState.IsValid) return RedirectToAction();
-        
+        if (!ModelState.IsValid)
+        {
+            return View(question);
+        }
         _context.Questions.Add(question);
         _context.SaveChanges();
         
