@@ -17,7 +17,8 @@ public class HomeController : Controller
     [Route("")]
     public IActionResult Index()
     {
-        return View(_context.Questions.OrderBy(m => m.Answer).ThenBy(m => m.CreatedAt).ToList());
+        var list = _context.Questions.OrderBy(m => !string.IsNullOrEmpty(m.Answer)).ThenBy(m => m.CreatedAt).ToList();
+        return View(list);
     }
     
     [Route("details/{questionId:int}")]
