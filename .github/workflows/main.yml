@@ -31,11 +31,14 @@ jobs:
     - name: Deploy with rsync
       run: rsync -avz /home/runner/work/TLHCommunityMeeting/TLHCommunityMeeting/deploy/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
       
-    - name: Update database
+    - name: EF Core CLI
       run: |
         dotnet tool install --global dotnet-ef
         dotnet tool restore
-        dotnet-ef database update --project "/home/runner/work/TLHCommunityMeeting/TLHCommunityMeeting" --connection ${{ secrets.REMOTE_DATABASE_CONNEXION_STRING }} 
+        cd /home/runner/work/TLHCommunityMeeting/TLHCommunityMeeting
+        dotnet-ef database update --connection ${{ secrets.REMOTE_DATABASE_CONNEXION_STRING }}
+      shell: bash
+        
     - name: Reload service
       uses: garygrossgarten/github-action-ssh@release
       with:
