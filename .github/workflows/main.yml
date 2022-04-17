@@ -31,6 +31,11 @@ jobs:
     - name: Deploy with rsync
       run: rsync -avz /home/runner/work/TLHCommunityMeeting/TLHCommunityMeeting/deploy/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
       
+    - name: Update database
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet tool restore
+        dotnet ef database update --connection ${{ secrets.REMOTE_DATABASE_CONNEXION_STRING }} 
     - name: Reload service
       uses: garygrossgarten/github-action-ssh@release
       with:
