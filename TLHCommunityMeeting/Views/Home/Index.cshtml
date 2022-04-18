@@ -3,6 +3,11 @@
     <h1 class="display-4">Question / Réponse</h1>
     <p class="lead">
     <a href="@Url.Action("Create", "Home")" class="btn btn-primary">Poser une question ?</a>
+        <p>
+            <a asp-controller="History">
+                <button class=" btn btn-secondary btn-sm float-end mb-3">Historique des réunions</button>
+            </a>
+        </p>
 
     <table id="table_id" class="display">
         <thead>
@@ -55,11 +60,6 @@
         }
         </tbody>
     </table>
-    <p>
-                <a asp-controller="History">
-                    <button class=" btn btn-secondary btn-sm float-end mt-5">Historique des réunions</button>
-                </a>
-            </p>
 </div>
 
 
