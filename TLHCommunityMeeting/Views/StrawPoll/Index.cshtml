@@ -1,0 +1,67 @@
+﻿@using TLHCommunityMeeting.Services.StrawPoll.Models
+@model List<TLHCommunityMeeting.Services.StrawPoll.Models.ApiStrawPollGet.Root>
+
+@{
+    ViewBag.Title = "StrawPoll";
+    Layout = "_Layout";
+}
+
+<div class="text-center">
+    <h1 class="display-4">StrawPoll</h1>
+    <p class="lead">
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <a href="@Url.Action("Create", "StrawPoll")" class="btn btn-primary">Créer</a>
+    }
+
+    <table id="table_id" class="display">
+        <thead>
+        <tr>
+            <th>Question</th>
+            <th>Status</th>
+            <th>Votes</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (ApiStrawPollGet.Root dspo in Model)
+        {
+            <tr>
+                <td>
+                    <a class="text-decoration-none" href="@dspo.Poll.Url">@dspo.Poll.Title</a>
+                </td>
+                <td>@dspo.Poll.Status</td>
+                <td>
+                    @foreach (var po in dspo.Poll.PollOptions)
+                    {
+                        <div>@po.Value : @po.VoteCount</div>
+                    }
+                </td>
+                <td>
+                    <form asp-action="Delete" asp-route-id="@dspo.Poll.Id">
+                        <input type="submit" value="Suppr" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous supprimer le strawpoll : @dspo.Poll.Title ?')"/>
+                    </form>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/French.json"
+                },
+                "order": [], 
+                "columnDefs": [
+                    { "width": "20%", "targets": 5 }
+                ]
+            });
+        });
+    </script>
+}

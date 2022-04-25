@@ -6,7 +6,7 @@
 
 <h1><p>Je souhaite poser une question : </p></h1>
 
-<form action="" method="post">
+<form asp-action="Create" method="post">
     @Html.AntiForgeryToken()
     <div class="form-group">
         <label asp-for="DiscordUserId"></label><br>
