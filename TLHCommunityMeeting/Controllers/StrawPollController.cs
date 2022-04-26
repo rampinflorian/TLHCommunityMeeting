@@ -13,7 +13,7 @@ public class StrawPollController : Controller
     private readonly ApplicationDbContext _context;
     private readonly StrawPollService _strawPollService;
 
-    public StrawPollController(ApplicationDbContext context, StrawPollService? strawPollService)
+    public StrawPollController(ApplicationDbContext context, StrawPollService strawPollService)
     {
         _context = context;
         _strawPollService = strawPollService;
@@ -46,7 +46,7 @@ public class StrawPollController : Controller
         {
             _context.Add(new StrawPoll()
             {
-                ApiPath = strawPoll.Poll?.Id
+                ApiPath = strawPoll.Poll?.Id!
             });
 
             await _context.SaveChangesAsync();

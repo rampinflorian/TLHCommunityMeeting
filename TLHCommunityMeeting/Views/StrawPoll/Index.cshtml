@@ -4,6 +4,13 @@
 @{
     ViewBag.Title = "StrawPoll";
     Layout = "_Layout";
+
+    DateTime ConvertTimestampToDateTime(long timestamp)
+    {
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+        dateTime = dateTime.AddSeconds(timestamp).ToLocalTime();
+        return dateTime;
+    }
 }
 
 <div class="text-center">
@@ -18,7 +25,7 @@
         <thead>
         <tr>
             <th>Question</th>
-            <th>Status</th>
+            <th>Création</th>
             <th>Votes</th>
             <th></th>
         </tr>
@@ -30,7 +37,7 @@
                 <td>
                     <a class="text-decoration-none" href="@dspo.Poll.Url">@dspo.Poll.Title</a>
                 </td>
-                <td>@dspo.Poll.Status</td>
+                <td>@ConvertTimestampToDateTime(@dspo.Poll.CreatedAt).ToString("G")</td>
                 <td>
                     @foreach (var po in dspo.Poll.PollOptions)
                     {
@@ -38,9 +45,20 @@
                     }
                 </td>
                 <td>
-                    <form asp-action="Delete" asp-route-id="@dspo.Poll.Id">
-                        <input type="submit" value="Suppr" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous supprimer le strawpoll : @dspo.Poll.Title ?')"/>
-                    </form>
+                    <div class="btn-group">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <form asp-action="Delete" asp-route-id="@dspo.Poll.Id">
+                                <input type="submit" value="Suppr" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous supprimer le strawpoll : @dspo.Poll.Title ?')"/>
+                            </form>
+                        }
+                        @{
+                            var httpsStrawpollResult = "https://strawpoll.com" + dspo.Poll.ResultsPath;
+                        }
+                        <a href="@httpsStrawpollResult">
+                            <button class="btn btn-primary btn-sm">Résultats</button>
+                        </a>
+                    </div>
                 </td>
             </tr>
         }
@@ -65,3 +83,4 @@
         });
     </script>
 }
+

@@ -30,7 +30,10 @@ public class StrawPollService
             var content = await response.Content.ReadAsStringAsync();
             var deserializedObject = JsonConvert.DeserializeObject<ApiStrawPollGet.Root>(content);
 
-            strawPolls.Add(deserializedObject);
+            if (deserializedObject.Poll is not null)
+            {
+                strawPolls.Add(deserializedObject);
+            }
         }
 
         return strawPolls;
@@ -59,22 +62,22 @@ public class StrawPollService
         return deserializedObject;
     }
 
-    private static List<ApiStrawPollPost.PollOption> _GetListFromStringSeparator(string input, char separator)
-    {
-        var inputList = input.Split(separator);
-        var list = inputList.Select(item => new ApiStrawPollPost.PollOption() { Value = item }).ToList();
-
-        return (list);
-    }
-
     public async Task<bool> DeleteStrawPollAsync(TLHCommunityMeeting.Models.StrawPoll strawPoll)
     {
         using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("X-API-Key", StrawPollApiKey);
 
         var content = await httpClient.DeleteAsync($"https://api.strawpoll.com/v2/polls/{strawPoll.ApiPath}");
-
+        
         return true;
 
+    }
+
+    private static List<ApiStrawPollPost.PollOption> _GetListFromStringSeparator(string input, char separator)
+    {
+        var inputList = input.Split(separator);
+        var list = inputList.Select(item => new ApiStrawPollPost.PollOption() { Value = item }).ToList();
+
+        return (list);
     }
 }
