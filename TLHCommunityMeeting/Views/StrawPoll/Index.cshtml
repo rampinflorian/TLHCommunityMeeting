@@ -41,7 +41,7 @@
                 <td>
                     @foreach (var po in dspo.Poll.PollOptions)
                     {
-                        <div>@po.Value : @po.VoteCount</div>
+                        <div>@po.Value : <span class="badge bg-secondary">@po.VoteCount</span></div>
                     }
                 </td>
                 <td>
