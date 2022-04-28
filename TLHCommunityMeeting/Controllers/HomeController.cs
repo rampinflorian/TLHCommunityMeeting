@@ -17,7 +17,7 @@ public class HomeController : Controller
     [Route("")]
     public IActionResult Index()
     {
-        var list = _context.Questions.OrderBy(m => !string.IsNullOrEmpty(m.Answer)).ThenBy(m => m.CreatedAt).ToList();
+        var list = _context.Questions.Where(m => m.MeetingAt == null).OrderBy(m => !string.IsNullOrEmpty(m.Answer)).ThenBy(m => m.CreatedAt).ToList();
         return View(list);
     }
     
