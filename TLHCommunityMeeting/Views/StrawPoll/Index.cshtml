@@ -1,0 +1,86 @@
+﻿@using TLHCommunityMeeting.Services.StrawPoll.Models
+@model List<TLHCommunityMeeting.Services.StrawPoll.Models.ApiStrawPollGet.Root>
+
+@{
+    ViewBag.Title = "StrawPoll";
+    Layout = "_Layout";
+
+    DateTime ConvertTimestampToDateTime(long timestamp)
+    {
+        DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+        dateTime = dateTime.AddSeconds(timestamp).ToLocalTime();
+        return dateTime;
+    }
+}
+
+<div class="text-center">
+    <h1 class="display-4">StrawPoll</h1>
+    <p class="lead">
+    @if (User.Identity != null && User.Identity.IsAuthenticated)
+    {
+        <a href="@Url.Action("Create", "StrawPoll")" class="btn btn-primary">Créer</a>
+    }
+
+    <table id="table_id" class="display">
+        <thead>
+        <tr>
+            <th>Question</th>
+            <th>Création</th>
+            <th>Votes</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (ApiStrawPollGet.Root dspo in Model)
+        {
+            <tr>
+                <td>
+                    <a class="text-decoration-none" href="@dspo.Poll.Url">@dspo.Poll.Title</a>
+                </td>
+                <td>@ConvertTimestampToDateTime(@dspo.Poll.CreatedAt).ToString("G")</td>
+                <td>
+                    @foreach (var po in dspo.Poll.PollOptions)
+                    {
+                        <div>@po.Value : <span class="badge bg-secondary">@po.VoteCount</span></div>
+                    }
+                </td>
+                <td>
+                    <div class="btn-group">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <form asp-action="Delete" asp-route-id="@dspo.Poll.Id">
+                                <input type="submit" value="Suppr" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous supprimer le strawpoll : @dspo.Poll.Title ?')"/>
+                            </form>
+                        }
+                        @{
+                            var httpsStrawpollResult = "https://strawpoll.com" + dspo.Poll.ResultsPath;
+                        }
+                        <a href="@httpsStrawpollResult">
+                            <button class="btn btn-primary btn-sm">Résultats</button>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#table_id').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/French.json"
+                },
+                "order": [], 
+                "columnDefs": [
+                    { "width": "20%", "targets": 5 }
+                ]
+            });
+        });
+    </script>
+}
+

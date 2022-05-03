@@ -1,0 +1,48 @@
+name: Publish and Deploy Master
+
+on: 
+  push:
+    tags:
+     'release-[0-9].[0-9]+.[0-9]+'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Dotnet Publish
+      run: dotnet publish -c Release -o deploy
+      
+    - name: Install SSH Key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.REMOTE_KEY }}
+        known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
+      
+    - name: Adding Known Hosts
+      run: ssh-keyscan -H ${{ secrets.REMOTE_HOST }} >> ~/.ssh/known_hosts
+      
+    - name: Deploy with rsync
+      run: rsync -avz /home/runner/work/TLHCommunityMeeting/TLHCommunityMeeting/deploy/ ${{ secrets.REMOTE_USER }}@${{ secrets.REMOTE_HOST }}:${{ secrets.REMOTE_TARGET }}
+      
+    - name: EF Core CLI
+      run: |
+        dotnet tool install --global dotnet-ef
+        dotnet tool restore
+        cd /home/runner/work/TLHCommunityMeeting/TLHCommunityMeeting/TLHCommunityMeeting/
+        dotnet-ef database update --connection ${{ secrets.REMOTE_DATABASE_CONNEXION_STRING }}
+      shell: bash
+        
+    - name: Reload service
+      uses: garygrossgarten/github-action-ssh@release
+      with:
+        command: ./deploy-TLHCommunityMeeting-service.sh ${{ secrets.REMOTE_PASSWORD }} 
+        host: ${{ secrets.REMOTE_HOST }}
+        username: ${{ secrets.REMOTE_USER }}
+        privateKey: ${{ secrets.REMOTE_KEY }}

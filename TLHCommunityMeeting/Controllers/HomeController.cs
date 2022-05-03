@@ -17,8 +17,19 @@ public class HomeController : Controller
     [Route("")]
     public IActionResult Index()
     {
-        return View(_context.Questions.OrderBy(m => m.CreatedAt).ToList());
+        var list = _context.Questions.Where(m => m.MeetingAt == null).OrderBy(m => !string.IsNullOrEmpty(m.Answer)).ThenBy(m => m.CreatedAt).ToList();
+        return View(list);
     }
+    
+    [Route("details/{questionId:int}")]
+    [HttpGet]
+    public IActionResult Details(int questionId)
+    {
+        var question = _context.Questions.First(m => m.QuestionId == questionId);
+
+        return View(question);
+    }
+    
     
     [Route("create")]
     [HttpGet]
@@ -29,13 +40,56 @@ public class HomeController : Controller
     
     [Route("create")]
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Create(Question question)
     {
-        if (!ModelState.IsValid) return RedirectToAction();
-        
+        if (!ModelState.IsValid)
+        {
+            return View(question);
+        }
         _context.Questions.Add(question);
         _context.SaveChanges();
         
-        return RedirectToAction("Index");
+        return RedirectToAction(nameof(Index));
     }
+    
+    [Route("edit/{id:int}")]
+    [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var question = _context.Questions.Find(id);
+        if (question == null) return RedirectToAction(nameof(Index));
+        
+        return View(question);
+    }
+    
+    [Route("edit/{id:int}")]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Edit(int id, Question question)
+    {
+        if (!ModelState.IsValid) return RedirectToAction(nameof(Index));
+        
+        _context.Questions.Update(question);
+        _context.SaveChanges();
+        
+        return RedirectToAction(nameof(Index));
+    }
+    
+    [Route("delete/{id:int}")]
+    [HttpPost, ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public IActionResult Delete(int id)
+    {
+        var question = _context.Questions.Find(id);
+        if (question == null) return RedirectToAction(nameof(Index));
+
+        _context.Remove(question);
+        _context.SaveChanges();
+
+        return RedirectToAction(nameof(Index));
+
+
+    }
+    
 }

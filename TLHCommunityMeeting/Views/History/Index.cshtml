@@ -1,14 +1,9 @@
-﻿@model List<Question>
+﻿@model List<TLHCommunityMeeting.Models.Question>
 <div class="text-center">
     <h1 class="display-4">Question / Réponse</h1>
+    <h3>Historique des sessions</h3>
     <p class="lead">
-    <a href="@Url.Action("Create", "Home")" class="btn btn-primary">Poser une question ?</a>
-        <p>
-            <a asp-controller="History">
-                <button class=" btn btn-secondary btn-sm float-end mb-3">Historique des réunions</button>
-            </a>
-        </p>
-
+    
     <table id="table_id" class="display">
         <thead>
         <tr>
@@ -16,7 +11,7 @@
             <th>Sujet</th>
             <th>Question</th>
             <th>Réponse</th>
-            <th>Date de création</th>
+            <th>Session</th>
             <th></th>
         </tr>
         </thead>
@@ -37,23 +32,13 @@
                     @q.Answer.Substring(0, q.Answer.Length > 100 ? 100 : q.Answer.Length)
                 </td>
                 <td>
-                    @q.CreatedAt.ToString("G")
+                    @q.MeetingAt?.ToString("d")
                 </td>
                 <td>
                     <div class="btn-group">
-                        <a asp-action="Details" asp-route-questionId="@q.QuestionId">
+                        <a asp-controller="Home" asp-action="Details" asp-route-questionId="@q.QuestionId">
                             <button class="btn btn-secondary btn-sm">Voir</button>
                         </a>
-                        @if (User.Identity != null && User.Identity.IsAuthenticated)
-                        {
-                            <a asp-action="Edit" asp-route-id="@q.QuestionId">
-                                <button class="btn btn-primary btn-sm">Répondre</button>
-                            </a>
-                            <form asp-action="Delete" asp-route-id="@q.QuestionId">
-                                <input type="submit" value="Suppr" class="btn btn-danger btn-sm" onclick="return confirm('Voulez-vous supprimer la question de @q.DiscordUserId')"/>
-                            </form>
-                        }
-
                     </div>
                 </td>
             </tr>
@@ -61,8 +46,6 @@
         </tbody>
     </table>
 </div>
-
-
 
 @section Scripts
 {
